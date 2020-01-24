@@ -13,10 +13,9 @@ jobs:
     - name: build action
       run: |
         npm install
-        npm run all
+        npm run build
         npm prune --production
-        npm install @zeit/ncc
-        ncc build -m
+        npx @zeit/ncc build -m
         git checkout --orphan releases/v1
         git rm --cached -r .
         git add -f dist action.yml README.md LICENSE
@@ -30,6 +29,8 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: releases/v1
         force: true
+#npm run all
+#npm prune --production        
 #    - name: Create Release
 #      id: create_release
 #      uses: actions/create-release@v1
