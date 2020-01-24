@@ -15,7 +15,7 @@ jobs:
         npm install
         npm run all
         npm prune --production
-        npm install -g @zeit/ncc
+        npm install @zeit/ncc
         ncc build -m
         git checkout --orphan releases/v1
         git rm --cached -r .
