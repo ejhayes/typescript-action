@@ -17,7 +17,7 @@ jobs:
         npm prune --production
         npx @zeit/ncc build -m
         git checkout --orphan releases/v1
-        git rm --cached -r .
+        git rm -f --cached -r .
         git add -f dist action.yml README.md LICENSE
         git clean -fdx
         git config --local user.email "action@github.com"
