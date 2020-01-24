@@ -1,0 +1,47 @@
+name: "build-release"
+on: # rebuild any PRs and main branch changes
+  push:
+    branches:
+      - master
+      - 'v*'
+
+jobs:
+  release: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: build action
+      run: |
+        npm install
+        npm run all
+        npm prune --production
+        npm install -g @zeit/ncc
+        ncc build -m
+        git checkout --orphan releases/v1
+        git rm --cached -r .
+        git add -f dist action.yml README.md LICENSE
+        git clean -fdx
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "release v1"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: releases/v1
+        force: true
+#    - name: Create Release
+#      id: create_release
+#      uses: actions/create-release@v1
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+#      with:
+#        tag_name: releases/v1
+#        release_name: Release ${{ github.ref }}
+#        body: |
+#          Changes in this Release
+#          - First Change
+#          - Second Change
+#        draft: false
+#        prerelease: false
+# zip -r v1 LICENSE README.md action.yml dist 
